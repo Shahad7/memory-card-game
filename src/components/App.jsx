@@ -2,13 +2,19 @@ import { useState, useEffect } from "react";
 import "../styles/index.css";
 import Card from "./Card.jsx";
 import Scoreboard from "./Scoreboard.jsx";
+import Result from "./Result.jsx";
+import { v4 as uuidv4 } from "uuid";
 
 function App() {
     const [content, setContent] = useState([]);
     const [selectedCards, setSelectedCards] = useState([]);
     const [score, setScore] = useState(0);
     const [highScore, setHighScore] = useState(0);
-    const [res, setRes] = useState("");
+    const [gameover, setGameover] = useState(false);
+
+    useEffect(() => {
+        if (score != 0) handleAnimation();
+    }, [score]);
 
     useEffect(() => {
         let ignore = false;
@@ -29,7 +35,8 @@ function App() {
                         image: elt.image,
                     };
                 });
-                setContent(characterSet);
+                let shuffledSet = shuffle(characterSet);
+                setContent(shuffledSet);
             }
         }
         getData();
@@ -41,48 +48,72 @@ function App() {
 
     const cards = content.map((elt) => (
         <Card
-            key={elt.id}
             id={elt.id}
+            key={uuidv4()}
             name={elt.name}
             image={elt.image}
             handleClick={handleClick}
         />
     ));
 
-    function shuffle() {
+    function shuffle(param) {
         let temp, randomIndex;
-        let arr = content.slice();
+        let arr = param.slice();
         for (let i = 0; i < 12; i++) {
             randomIndex = Math.floor(Math.random() * 12);
             temp = arr[randomIndex];
-            arr[randomIndex] = arr[12];
-            arr[12] = temp;
+            arr[randomIndex] = arr[11];
+            arr[11] = temp;
         }
         arr = arr.filter((elt) => elt != undefined);
         return arr;
     }
 
     function handleClick(e) {
-        let newContent = shuffle();
-        setContent(newContent.slice());
+        if (!gameover) {
+            handleAnimation();
 
-        if (!selectedCards.includes(e.target.id)) {
-            if (score == 11) {
-                //need to add an option to restart the game!
+            let newContent = shuffle(content);
+            setContent(newContent.slice());
+
+            if (!selectedCards.includes(e.target.id)) {
+                if (score == 11) {
+                    setGameover(true);
+                }
+                selectedCards.push(e.target.id);
+                setSelectedCards(selectedCards.slice());
+                setScore(score + 1);
+            } else {
+                if (score > highScore) setHighScore(score);
+                setGameover(true);
             }
-            selectedCards.push(e.target.id);
-            setSelectedCards(selectedCards.slice());
-            setScore(score + 1);
-        } else {
-            if (score > highScore) setHighScore(score);
-            setScore(0);
-            setSelectedCards([]);
         }
     }
+
+    function handleAnimation() {
+        document.querySelectorAll(".card").forEach((elt) => {
+            elt.style.animationPlayState = "running";
+            elt.firstChild.style.animationPlayState = "running";
+            setTimeout(() => {
+                elt.style.animationPlayState = "paused";
+                elt.firstChild.style.animationPlayState = "paused";
+            }, 1600);
+        });
+    }
+
     return (
         <div id="app">
             {cards}
-            <Scoreboard score={score} highScore={highScore} res={res} />
+            <Scoreboard score={score} highScore={highScore} />
+            {gameover ? (
+                <Result
+                    score={score}
+                    setSelectedCards={setSelectedCards}
+                    setHighScore={setHighScore}
+                    setScore={setScore}
+                    setGameover={setGameover}
+                />
+            ) : null}
         </div>
     );
 }
