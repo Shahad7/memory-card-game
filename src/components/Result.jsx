@@ -19,9 +19,9 @@ function Result({
 
     return (
         <div id="result">
-            {score == 12 ? <p>you won</p> : <p>loser!</p>}
+            {score == 12 ? <p>you won {":)"}</p> : <p>you lose {":("}</p>}
             <button id="restart" onClick={restart}>
-                restart
+                Play again
             </button>
         </div>
     );

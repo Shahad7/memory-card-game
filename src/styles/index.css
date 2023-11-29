@@ -1,5 +1,6 @@
 body {
     margin: 0;
+    font-family: Special Elite, sans-serif;
 }
 
 #root {
@@ -7,26 +8,15 @@ body {
     justify-content: center;
     align-items: center;
     min-height: 100vh;
-    background-color: white;
+    background-image: url(../assets/bg2.png);
 }
 
 #app {
     display: grid;
     grid-template: 1fr 1fr 1fr/1fr 1fr 1fr 1fr;
-    gap: 85px;
+    gap: 40px min(3.3vw, 60px);
     grid-area: 2/1/-1/-1;
     margin-inline: 50px;
-}
-
-.card {
-    max-height: 220px;
-    max-width: 140px;
-    border: solid black 1px;
-    box-shadow: 1px 1px 20px navy;
-    perspective: 10px;
-    animation: rotateCard 1.6s ease-in-out 1ms;
-    animation-play-state: paused;
-    background-image: url("../assets/dummy.jpg");
 }
 
 @keyframes rotateCard {
@@ -44,31 +34,102 @@ body {
     }
 }
 
-.character-image {
-    max-height: 100%;
-    max-width: 100%;
-    pointer-events: none;
-    animation: hideImage 1.6s ease-in-out 1ms;
-    animation-play-state: paused;
-}
-
 @keyframes hideImage {
     0% {
         opacity: 100;
+        color: white;
     }
-    35% {
+    10% {
+        opacity: 100;
+        color: white;
+    }
+    15% {
         opacity: 0;
+        color: transparent;
     }
     65% {
         opacity: 0;
+        color: transparent;
+    }
+    66% {
+        opacity: 100;
+        color: white;
     }
     100% {
         opacity: 100;
+        color: white;
     }
+}
+
+@keyframes hideText {
+    0% {
+        color: rgb(163, 231, 163);
+    }
+    2% {
+        color: rgb(163, 231, 163);
+    }
+    4% {
+        color: transparent;
+    }
+    65% {
+        color: transparent;
+    }
+    66% {
+        color: rgb(163, 231, 163);
+    }
+    100% {
+        color: rgb(163, 231, 163);
+    }
+}
+
+.card {
+    display: flex;
+    flex-direction: column;
+    color: rgb(163, 231, 163);
+    animation: hideText 1.6s ease-in-out 1ms;
+    animation-play-state: paused;
+    max-height: 220px;
+    max-width: 140px;
+    transform-origin: center;
+    /*transform: perspective(1000px) rotateY(0deg) rotateX(0deg);*/
+}
+
+.character-container {
+    pointer-events: none;
+    display: flex;
+    padding: 0;
+    border-radius: 8px;
+    filter: contrast(120%);
+    /*  box-shadow: 1px 1px 20px navy; */
+    color: white;
+    background-image: url("../assets/card.jpg");
+    background-size: cover;
+    background-repeat: no-repeat;
+    background-position-x: center;
+    background-position-y: center;
+    perspective: 10px;
+    transform-style: preserve-3d;
+    animation: rotateCard 1.6s ease-in-out 1ms;
+    animation-play-state: paused;
+    box-sizing: border-box;
+}
+
+.character-image {
+    border-radius: 8px;
+    aspect-ratio: 12.5/16;
+    max-height: 100%;
+    max-width: 100%;
+    animation: hideImage 1.6s ease-in-out 1ms;
+    animation-play-state: paused;
+    pointer-events: none;
 }
 
 .character-name {
     font-size: clamp(0.8rem, 1vw, 16px);
+    padding-top: 8px;
+    font-weight: bold;
+    box-sizing: border-box;
+    align-self: center;
     text-align: center;
 }
 
@@ -85,4 +146,52 @@ body {
     position: absolute;
     top: 1%;
     right: 2%;
+    color: white;
+    font-size: clamp(14px, 1.8vw, 32px);
+    font-family: Special Elite, sans-serif;
+    font-weight: bold;
+    color: orange;
+    margin-bottom: 50px;
+}
+
+#result {
+    border-radius: 20px;
+    display: flex;
+    align-items: center;
+    flex-direction: column;
+    min-width: 30vw;
+    min-height: 10vw;
+    box-sizing: border-box;
+    font-size: 40px;
+    color: black;
+    background-color: orange;
+}
+
+button {
+    outline: none;
+    border: solid 1px black;
+    border-radius: 10px;
+    font-family: Special Elite, sans-serif;
+    background-color: black;
+    color: white;
+    font-size: 0.5em;
+    font-weight: bolder;
+    height: 3em;
+    width: 15em;
+    margin-bottom: 8px;
+}
+
+button:hover {
+    background-color: #fff;
+    color: black;
+}
+@media (max-height: 742px) {
+    .card {
+        height: max(100px, 22vh);
+        width: max(80px, 7vw);
+    }
+    .character-image {
+        height: max(100px, 22vh);
+        width: max(80px, 7vw);
+    }
 }

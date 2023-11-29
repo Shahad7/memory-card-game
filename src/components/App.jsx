@@ -19,6 +19,7 @@ function App() {
     useEffect(() => {
         let ignore = false;
         let name, image;
+        let firstName, secondName;
         async function getData() {
             const result = await fetch(
                 "https://rickandmortyapi.com/api/character"
@@ -29,9 +30,14 @@ function App() {
 
             if (!ignore) {
                 const characterSet = characters.map((elt) => {
+                    firstName = elt.name.split(" ")[0];
+                    secondName = elt.name.split(" ")[1];
                     return {
                         id: elt.id,
-                        name: elt.name,
+                        name:
+                            firstName +
+                            " " +
+                            (secondName != undefined ? secondName : ""),
                         image: elt.image,
                     };
                 });
@@ -72,10 +78,8 @@ function App() {
     function handleClick(e) {
         if (!gameover) {
             handleAnimation();
-
             let newContent = shuffle(content);
             setContent(newContent.slice());
-
             if (!selectedCards.includes(e.target.id)) {
                 if (score == 11) {
                     setGameover(true);
@@ -94,9 +98,11 @@ function App() {
         document.querySelectorAll(".card").forEach((elt) => {
             elt.style.animationPlayState = "running";
             elt.firstChild.style.animationPlayState = "running";
+            elt.firstChild.firstChild.style.animationPlayState = "running";
             setTimeout(() => {
                 elt.style.animationPlayState = "paused";
                 elt.firstChild.style.animationPlayState = "paused";
+                elt.firstChild.firstChild.style.animationPlayState = "paused";
             }, 1600);
         });
     }
